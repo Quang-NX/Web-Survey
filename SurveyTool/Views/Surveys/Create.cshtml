@@ -1,0 +1,20 @@
+﻿@model SurveyTool.Models.Survey
+
+@{
+    ViewBag.Title = "Tạo mới";
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/cleditor")
+    @Scripts.Render("~/bundles/models")
+
+    <script type="text/javascript">
+        $(function() {
+            ko.validation.init({ insertMessages: false });
+            ko.applyBindings(new SurveyModel());
+        });
+    </script>
+}
+
+@Html.EditorForModel(new {title = "Tạo mới", url = Url.Action("Create")})

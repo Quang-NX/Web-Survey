@@ -1,0 +1,8 @@
+﻿@if (Request.IsAuthenticated)
+{
+    <ul class="nav">
+        <li><a href="@Url.Action("Index", "Dashboard")">Trang chủ</a></li>
+        <li><a href="@Url.Action("Index", "Reports")">Phản hồi</a></li>
+        <li><a href="@Url.Action("Index", "Surveys")">Quản trị admin</a></li>
+    </ul>
+}
