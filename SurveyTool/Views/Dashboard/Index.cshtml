@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Dashboard";
+    ViewBag.Title = "Trang chủ";
     var surveys = (IEnumerable<SurveyTool.Models.Survey>) ViewBag.Surveys;
     var responses = (IEnumerable<SurveyTool.Models.Response>) ViewBag.Responses;
 }
@@ -13,12 +13,12 @@
             $('#tabs a:first').tab('show');
 
             $('.label-success').tooltip({
-                title: 'You can access this survey',
+                title: 'Bạn có thể truy cập',
                 placement: 'top'
             });
 
             $('.label-important').tooltip({
-                title: 'You cannot access this survey',
+                title: 'Bạn không có quyền truy cập',
                 placement: 'top'
             });
 
@@ -91,14 +91,15 @@
             <hr />
         }
     </div>
+    
     <div id="history" class="tab-pane">
         <table id="response-list" class="table table-striped">
             <thead>
                 <tr>
-                    <th class="span1">Ngày</th>
-                    <th class="span8">Khảo sát</th>
+                    <th class="span1">Thời gian</th>
+                    <th class="span7">Khảo sát</th>
                     <th class="span2">Kết quả</th>
-                    <th class="span1">Hành động</th>
+                    <th class="span2">Hành động</th>
                 </tr>
             </thead>
             <tbody>

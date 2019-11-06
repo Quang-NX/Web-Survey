@@ -43,6 +43,7 @@ namespace SurveyTool.Controllers
         {
             if (ModelState.IsValid)
             {
+                //cập nhật thời gian tạo và thay đổi = thời gian hiện tại
                 survey.Questions.ForEach(q => q.CreatedOn = q.ModifiedOn = DateTime.Now);
                 _db.Surveys.Add(survey);
                 _db.SaveChanges();

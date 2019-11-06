@@ -33,7 +33,7 @@ namespace SurveyTool.Controllers
 
             return View(responses);
         }
-
+        //Hiển thị lịch sử những lần khảo sát
         [HttpGet]
         public ActionResult Details(int surveyId, int id)
         {
@@ -82,7 +82,7 @@ namespace SurveyTool.Controllers
             _db.Responses.Add(model);
             _db.SaveChanges();
 
-            TempData["success"] = "Your response was successfully saved!";
+            TempData["success"] = "Bài khảo sát đã được lưu!";
 
             return action == "Next"
                        ? RedirectToAction("Create", new {surveyId})
