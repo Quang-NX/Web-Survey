@@ -10,7 +10,7 @@
 
     <div class="row">
         <div class="span6">
-            <label>Tên</label>
+            <label>Tiêu đề</label>
             @Html.TextBoxFor(x => x.Name, new { @class = "span6" })
         </div>
         <div class="span6">
@@ -109,8 +109,10 @@
             <div class="span3">
                 <label for="Type">Thể loại</label>
                 <select id="Type" name="Type" data-bind="value: type">
-                    <option value="Yes/No">Yes/No</option>
+                    <option value="Yes/No">Có/Không</option>
+                    <option value="Correct/Incorrect">Đúng/Sai</option>
                     <option value="Number">Số</option>
+                    <option value="Text">Chữ</option>
                 </select>
             </div>
         </div>

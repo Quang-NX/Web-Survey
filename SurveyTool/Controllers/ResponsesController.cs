@@ -89,7 +89,6 @@ namespace SurveyTool.Controllers
                        : RedirectToAction("Index", "Home");
         }
 
-        [HttpPost]
         public ActionResult Delete(int surveyId, int id, string returnTo)
         {
             var response = new Response() { Id = id, SurveyId = surveyId };

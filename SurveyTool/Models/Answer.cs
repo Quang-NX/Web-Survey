@@ -28,16 +28,14 @@ namespace SurveyTool.Models
            {
                if (Question != null)
                {
-                   if (Question.Type == "Yes/No")
-                       return Value == "Yes" ? 1 : 0;
-
-                   if (Question.Type == "Number")
+                    if (Question.Type == "Number")
                    {
                        int num;
                        Int32.TryParse(Value, out num);
                        return num > 0 ? 1 : 0;
                    }
-               }
+                    return !string.IsNullOrEmpty(Value) ? 1 : 0;
+                }
 
                return 0;
            }

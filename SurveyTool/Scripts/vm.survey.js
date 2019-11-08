@@ -41,7 +41,7 @@
             self.modal.modal('hide');
         }
         else {
-            alert('Error: All fields are required!');
+            alert('Error: Tất cả các trường là bắt buộc!');
         }
     };
 
