@@ -3,6 +3,10 @@
     <ul class="nav">
         <li><a href="@Url.Action("Index", "Dashboard")">Trang chủ</a></li>
         <li><a href="@Url.Action("Index", "Reports")">Phản hồi</a></li>
-        <li><a href="@Url.Action("Index", "Surveys")">Quản trị admin</a></li>
+        @if (User.IsInRole("Admin"))
+        {
+            <li><a href="@Url.Action("Index", "Surveys")">Quản trị khảo sát</a></li>
+            <li><a href="@Url.Action("Index", "ManageUser")">Quản trị thành viên</a></li>
+        }
     </ul>
 }

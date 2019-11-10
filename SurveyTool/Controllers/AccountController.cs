@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using SurveyTool.Models;
@@ -17,6 +18,7 @@ namespace SurveyTool.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private readonly ApplicationDbContext context = new ApplicationDbContext();
 
         public AccountController()
         {
@@ -65,7 +67,6 @@ namespace SurveyTool.Controllers
         // POST: /Account/Login
         [HttpPost]
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
             if (!ModelState.IsValid)
@@ -152,11 +153,22 @@ namespace SurveyTool.Controllers
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
+                    var role = context.Roles.Where(x => x.Name.Equals("User")).SingleOrDefault();
+                    if(role==null)
+                    {
+                        IdentityRole iRole = new IdentityRole();
+                        iRole.Id = "User";
+                        iRole.Name = "User";
+                        context.Roles.Add(iRole);
+                        context.SaveChanges();
+                    }
+                    UserManager.AddToRole(user.Id, "User");
+                    context.SaveChanges();
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
