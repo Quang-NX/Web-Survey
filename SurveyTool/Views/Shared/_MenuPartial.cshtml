@@ -1,12 +1,13 @@
 ﻿@if (Request.IsAuthenticated)
 {
     <ul class="nav">
-        <li><a href="@Url.Action("Index", "Dashboard")">Trang chủ</a></li>
-        <li><a href="@Url.Action("Index", "Reports")">Phản hồi</a></li>
+        <li><a href="/Dashboard/Index">Trang chủ</a></li>
+        <li><a href="@Url.Action("Index", "Statistic")">Thống kê</a></li>
+        <li><a href="@Url.Action("Index", "Surveys")">Quản lý khảo sát</a></li>
         @if (User.IsInRole("Admin"))
         {
-            <li><a href="@Url.Action("Index", "Surveys")">Quản trị khảo sát</a></li>
-            <li><a href="@Url.Action("Index", "ManageUser")">Quản trị thành viên</a></li>
+            @*<li><a href="@Url.Action("Index", "Reports")">Phản hồi</a></li>*@
+            <li><a href="@Url.Action("Index", "ManageUser")">Quản lý thành viên</a></li>
         }
     </ul>
 }

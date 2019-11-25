@@ -2,11 +2,34 @@
 <html>
 <head>
     <title>@ViewBag.Title - Khảo sát</title>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" /> 
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     @Styles.Render("~/Content/bootstrap")
     @Styles.Render("~/Content/cleditor")
     @Styles.Render("~/Content/toastr")
     @Styles.Render("~/Content/site")
+    @Scripts.Render("~/bundles/jquery")
+    <link href="~/Assets/css/email.multiple.css" rel="stylesheet" />
+    <style>
+        .popupSocial {
+            z-index: 999;
+            text-align: center;
+            background: #2c4584;
+            position: fixed;
+            top: 45%;
+            left: 10px;
+            padding: 20px 10px;
+            border: 1px solid #333;
+            border-radius: 10px;
+        }
+
+        media screen and (max-width:768px) {
+            .popupSocial
+
+        {
+            display: none;
+        }
+    </style>
+
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -22,8 +45,24 @@
     <div id="content" class="container">
         @RenderBody()
     </div>
-    
-    @Scripts.Render("~/bundles/jquery")
+    <div id="fb-root"></div>
+    <script>
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v2.8&appId=966085800437135";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));</script>
+    <div class="popupSocial">
+        <div class="fb-like" data-href="https://www.facebook.com/Web-Survey-UET-101692197977054/" data-layout="box_count" data-action="like" data-size="small" data-show-faces="true" data-share="true"></div>
+        <br /><br />
+        <div style="width:60px">
+            <script src="https://apis.google.com/js/platform.js" async defer></script>
+            <g:plusone></g:plusone>
+        </div>
+    </div>
+
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/knockout")
     @Scripts.Render("~/bundles/toastr")

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace SurveyTool.Models
@@ -30,15 +31,19 @@ namespace SurveyTool.Models
             return Answers == null ? 0 : Answers.Sum(x => x.Score);
         }
 
-        public double CalculateScore()
+        public double CalculateScore(int totalQuestion=0)
         {
-            var questions = GetQuestionCount();
             var answers = GetAnswerCount();
 
-            if (questions == 0 || answers == 0)
+            if (totalQuestion == 0 || answers == 0)
                 return 0.0;
 
-            return (double)answers / (double)questions;
+            return (double)answers / (double)totalQuestion;
         }
+
+        public int CusId { get; set; }
+        [ForeignKey("CusId")]
+        public virtual Customer Customer { get; set; }
+
     }
 }

@@ -1,12 +1,12 @@
 ﻿@using SurveyTool.Models
 @model LoginViewModel
-    @{ 
-        Layout = null;
-    }
+@{
+    Layout = null;
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Login V9</title>
+    <title>Login</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--===============================================================================================-->
@@ -33,26 +33,25 @@
     <!--===============================================================================================-->
 </head>
 <body>
-
-
     <div class="container-login100" style="background-image: url('/Assets/images/bg-01.jpg');">
         <div class="wrap-login100 p-l-55 p-r-55 p-t-80 p-b-30">
             @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "login100-form validate-form", role = "form" }))
             {
                 @*<form class="login100-form validate-form" method="post">*@
+                @Html.ValidationSummary(false, null, new { @class = "text-danger" })
                 <span class="login100-form-title p-b-37">
-                    Admin
+                    Đăng nhập
                 </span>
 
                 <div class="wrap-input100 validate-input m-b-20" data-validate="Nhập email...">
                     @*<input class="input100" type="text" name="Email" placeholder="Nhập email...">*@
-                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control input100" })
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control input100", placeholder = "Nhập email" })
                     <span class="focus-input100"></span>
                 </div>
 
                 <div class="wrap-input100 validate-input m-b-25" data-validate="Nhập mật khẩu...">
                     @*<input class="input100" type="password" name="Password" placeholder="Nhập mật khẩu...">*@
-                    @Html.PasswordFor(m => m.Password, new { @class = "form-control input100" })
+                    @Html.PasswordFor(m => m.Password, new { @class = "form-control input100", placeholder = "Nhập mật khẩu" })
                     <span class="focus-input100"></span>
                 </div>
 
@@ -60,37 +59,34 @@
                     <button class="login100-form-btn">
                         Đăng nhập
                     </button>
+
                 </div>
 
-                @*<div class="text-center p-t-57 p-b-20">
-                        <span class="txt1">
-                            Or login with
-                        </span>
-                    </div>
 
-                    <div class="flex-c p-b-112">
-                        <a href="#" class="login100-social-item">
-                            <i class="fa fa-facebook-f"></i>
-                        </a>
-
-                        <a href="#" class="login100-social-item">
-                            <img src="~/Assets/images/icons/icon-google.png" alt="GOOGLE">
-                        </a>
-                    </div>*@
-
-                @*<div class="text-center">
-                        <a href="#" class="txt2 hov1">
-                            Sign Up
-                        </a>
-                    </div>*@
-                @*</form>*@
             }
+            <div class="container-login100-form-btn">
+                <form method="get" action="/Account/Register" style="margin-top:20px">
+                    <button class="register100-form-btn">
+                        Đăng kí
+                    </button>
+                </form>
+            </div>
 
+            <div class="text-center p-t-57 p-b-20">
+                <span class="txt1">
+                    hoặc
+                </span>
+            </div>
 
+            <div class="flex-c p-b-112">
+                
+                @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
+
+            </div>
 
         </div>
-    </div>
 
+    </div>
 
 
     <div id="dropDownSelect1"></div>

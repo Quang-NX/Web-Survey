@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 using SurveyTool.Models;
 
 namespace SurveyTool.Controllers
@@ -21,10 +22,12 @@ namespace SurveyTool.Controllers
         [HttpGet]
         public ActionResult Index(int surveyId)
         {
+            var userId = User.Identity.GetUserId();
             var responses = _db.Responses
                                .Include("Survey")
                                .Include("Answers")
                                .Include("Answers.Question")
+                               .Where(x=>x.Survey.UserId.Equals(userId))
                                .Where(x => x.SurveyId == surveyId)
                                .Where(x => x.CreatedBy == User.Identity.Name)
                                .OrderByDescending(x => x.CreatedOn)
@@ -79,6 +82,20 @@ namespace SurveyTool.Controllers
             model.SurveyId = surveyId;
             model.CreatedBy = User.Identity.Name;
             model.CreatedOn = DateTime.Now;
+            //Save infomation customer response
+            var customer = new Customer();
+            foreach(var item in model.Answers)
+            {
+                var question = _db.Questions.Where(x => x.Id == item.QuestionId).FirstOrDefault();
+                if (question.Type.Equals("Email"))
+                {
+                    customer.Email = item.Value;
+                    customer.Name = item.Value;
+                }
+            }
+            _db.Customers.Add(customer);
+            _db.SaveChanges();
+            model.CusId = customer.Id;
             _db.Responses.Add(model);
             _db.SaveChanges();
 
@@ -94,7 +111,7 @@ namespace SurveyTool.Controllers
             var response = new Response() { Id = id, SurveyId = surveyId };
             _db.Entry(response).State = EntityState.Deleted;
             _db.SaveChanges();
-            return Redirect(returnTo ?? Url.RouteUrl("Root"));
+            return Redirect(returnTo ?? Url.RouteUrl("Statistic"));
         }
     }
 }

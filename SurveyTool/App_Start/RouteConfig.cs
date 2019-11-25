@@ -14,6 +14,11 @@ namespace SurveyTool
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
+                name: "Statistic",
+                url: "Statistic",
+                defaults: new { controller = "Statistic", action = "Index" });
+
+            routes.MapRoute(
                 name: "Root",
                 url: "",
                 defaults: new { controller = "Dashboard", action = "Index" });
@@ -22,6 +27,11 @@ namespace SurveyTool
                 name: "Responses",
                 url: "Surveys/{surveyId}/Responses/{action}/{id}",
                 defaults: new { controller = "Responses", action = "Index", id = UrlParameter.Optional });
+
+            routes.MapRoute(
+                name: "SurveyCustomers",
+                url: "Surveys/{surveyId}/SurveyCustomer/{action}/{id}",
+                defaults: new { controller = "SurveyCustomer", action = "Index", id = UrlParameter.Optional });
 
             routes.MapRoute(
                 name: "Default",

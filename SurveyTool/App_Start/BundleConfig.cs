@@ -23,7 +23,8 @@ namespace SurveyTool
                             .Include("~/Content/toastr.css"));
 
             bundles.Add(new StyleBundle("~/Content/site")
-                            .Include("~/Content/site.css"));
+                            .Include("~/Content/site.css"))
+                        ;
 
             // ====================================================================================
             // SCRIPTS

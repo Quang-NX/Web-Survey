@@ -25,9 +25,6 @@
             @Html.AntiForgeryToken()
 
 
-
-            @Html.HiddenFor(m => m.UserName)
-
             @Html.HiddenFor(m => m.Id)
 
             @Html.HiddenFor(m => m.Email)
@@ -54,7 +51,7 @@
 
             <div class="form-group">
 
-                <label>Username:</label>
+                <label>Email:</label>
 
                 @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", required = "required" })
 

@@ -1,0 +1,181 @@
+﻿@using SurveyTool.Models
+@model IEnumerable<Response>
+@{
+    ViewBag.Title = "Index";
+}
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+
+<script src="https://code.highcharts.com/highcharts-3d.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto;box-shadow:0px 1px 2px 2px #00000069;border-radius:5px;"></div>
+<br />
+<div style="min-width: 310px; height: 400px; margin: 0 auto;box-shadow:0px 1px 2px 2px #00000069;border-radius:5px;">
+    <figure class="highcharts-figure">
+        <div id="container-cicle"></div>
+    </figure>
+</div>
+<script>
+    $(document).ready(function () {
+        $.getJSON("/Statistic/GetResponseToMonth", function (data) {
+            var names = [];
+            var responses = [];
+            for (var i = 0; i < data.length; i++) {
+                names.push('Tháng' + data[i].name);
+                responses.push(data[i].count);
+            }
+            Highcharts.chart('container', {
+                chart: {
+                    type: 'line'
+                },
+                title: {
+                    text: 'Số bài khảo sát trong tháng'
+                },
+                xAxis: {
+                    categories: names
+                },
+                plotOptions: {
+                    line: {
+                        dataLabels: {
+                            enabled: true
+                        },
+                        enableMouseTracking: false
+                    }
+                },
+                series: [{
+                    name: 'Khảo sát',
+                    data: responses
+                }]
+            });
+        });
+        $.getJSON("/Statistic/GetPersenQuestionType", function (data) {
+            console.log(data);
+            var email = 0;
+            var corr = 0;
+            var yesno = 0;
+            var text = 0;
+            var number = 0;
+
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].name === "Email") {
+                    this.email = data[i].persen;
+                    console.log(data[i].persen);
+                }
+                else if (data[i].name === "Đúng/Sai") {
+                    this.corr = data[i].persen;
+                    console.log(data[i].persen);
+                }
+                else if (data[i].name === "Có/Không") {
+                    this.yesno = data[i].persen;
+                    console.log(data[i].persen);
+                }
+                else if (data[i].name === "Chữ") {
+                    this.text = data[i].persen;
+                    console.log(data[i].persen);
+                }
+                else {
+                    this.number = data[i].persen;
+                    console.log(data[i].persen);
+                }
+            }
+
+            Highcharts.chart('container-cicle', {
+                chart: {
+                    type: 'pie',
+                    options3d: {
+                        enabled: true,
+                        alpha: 45,
+                        beta: 0
+                    }
+                },
+                title: {
+                    text: 'Số câu hỏi theo từng loại'
+                },
+                accessibility: {
+                    point: {
+                        valueSuffix: '%'
+                    }
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        depth: 35,
+                        dataLabels: {
+                            enabled: true,
+                            format: '{point.name}'
+                        }
+                    }
+                },
+                series: [{
+                    type: 'pie',
+                    name: 'Số câu hỏi',
+                    data:
+                        [
+                            ['Email', this.email],
+                            ['Văn bản', this.text],
+                            {
+                                name: 'Có/Không',
+                                y: this.yesno,
+                                sliced: true,
+                                selected: true
+                            },
+                            ['Đúng/Sai', this.corr],
+                            ['Số', this.number]
+                        ]
+                }]
+            });
+        });
+    });
+</script>
+
+
+
+<br />
+
+<div id="history" class="tab-pane">
+    <h3 style="margin-left:5px">Khảo sát gần đây</h3>
+    <table id="response-list" class="table table-striped">
+
+        <thead>
+            <tr>
+                <th class="span3">Thời gian</th>
+                <th class="span2">Chủ đề</th>
+                <th class="span2">Tài khoản</th>
+                <th class="span2">Kết quả</th>
+                <th class="span2">Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var response in Model)
+            {
+                <tr>
+                    <td><span class="muted">@response.CreatedOn</span></td>
+
+                    <td>
+                        @Html.ActionLink(response.Survey.Name, "Details", "Statistic",
+                                         new { surveyId = response.SurveyId, id = response.Id },
+                                         null)
+                    </td>
+                    <td>@response.CreatedBy</td>
+                    <td>
+                        @response.GetAnswerCount()/@response.Survey.Questions.Count()-
+                        @response.CalculateScore(response.Survey.Questions.Count()).ToString("P1")
+                    </td>
+                    <td>
+                        @Html.ActionLink("Xóa", "Delete", "Statistic",
+                       new { surveyId = response.SurveyId, id = response.Id },
+                       new { @class = "text-danger" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+

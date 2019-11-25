@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 using SurveyTool.Models;
 
 namespace SurveyTool.Controllers
@@ -21,7 +22,8 @@ namespace SurveyTool.Controllers
         [HttpGet]
         public ActionResult Index()
         {
-            var surveys = _db.Surveys.ToList();
+            var userId = User.Identity.GetUserId();
+            var surveys = _db.Surveys.Where(x => x.UserId.Equals(userId)).ToList();
             return View(surveys);
         }
 

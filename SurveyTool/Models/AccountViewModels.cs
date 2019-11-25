@@ -50,7 +50,7 @@ namespace SurveyTool.Models
     {
         [Required(ErrorMessage = "Email không được để trống")]
         [Display(Name = "Email")]
-        [EmailAddress]
+        [EmailAddress(ErrorMessage = "Email không hợp lệ")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Mật khẩu không được để trống")]
@@ -65,18 +65,19 @@ namespace SurveyTool.Models
     public class RegisterViewModel
     {
         [Required(ErrorMessage = "Email không được để trống")]
-        [EmailAddress]
+        [EmailAddress(ErrorMessage ="Email không hợp lệ")]
+        [DataType(DataType.EmailAddress,ErrorMessage ="Email không hợp lệ")]
         [Display(Name = "Email")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Mật khẩu không được để trống")]
         [StringLength(100, ErrorMessage = "Mật khẩu phải chứa tối thiểu 6 kí tự", MinimumLength = 6)]
-        [DataType(DataType.Password)]
+        [DataType(DataType.Password,ErrorMessage ="Mật khẩu không hợp lệ")]
         [Display(Name = "Mật khẩu")]
         public string Password { get; set; }
 
         [Required(ErrorMessage = "Chưa xác nhận mật khẩu")]
-        [DataType(DataType.Password)]
+        [DataType(DataType.Password,ErrorMessage ="Mật khẩu không hợp lệ")]
         [Display(Name = "Xác nhận mật khẩu")]
         [Compare("Password", ErrorMessage = "Mật khẩu không khớp")]
         public string ConfirmPassword { get; set; }

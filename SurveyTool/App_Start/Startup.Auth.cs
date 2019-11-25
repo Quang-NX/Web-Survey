@@ -26,7 +26,7 @@ namespace SurveyTool
             {
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
                 LoginPath = new PathString("/Account/Login"),
-                ExpireTimeSpan= TimeSpan.FromMinutes(2),
+                ExpireTimeSpan= TimeSpan.FromMinutes(10),
                 Provider = new CookieAuthenticationProvider
                 {
                     // Enables the application to validate the security stamp when the user logs in.
@@ -55,15 +55,16 @@ namespace SurveyTool
             //   consumerKey: "",
             //   consumerSecret: "");
 
-            //app.UseFacebookAuthentication(
-            //   appId: "",
-            //   appSecret: "");
+            app.UseFacebookAuthentication(
+               appId: "523018678282162",
+               appSecret: "4a749cc7c95553c2013fca057343505a");
 
-            //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
-            //{
-            //    ClientId = "",
-            //    ClientSecret = ""
-            //});
+            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
+            {
+                ClientId = "449538978032-jtpd5auh00nm7rcgs5liagm7op5d15n1.apps.googleusercontent.com",
+                ClientSecret = "3iw5hs5cxI2V7-BPEsLjXv5s",
+                Provider = new GoogleOAuth2AuthenticationProvider()
+            });
         }
     }
 }

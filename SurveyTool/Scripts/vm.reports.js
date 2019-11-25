@@ -94,6 +94,7 @@
             q.type(data.Questions[i].Type);
             q.body(data.Questions[i].Body);
             q.isActive(data.Questions[i].IsActive);
+            q.required(data.Questions[i].Required);
             self.questions.push(q);
         }
     }

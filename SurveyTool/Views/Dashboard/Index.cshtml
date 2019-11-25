@@ -1,9 +1,14 @@
 ﻿@{
     ViewBag.Title = "Trang chủ";
-    var surveys = (IEnumerable<SurveyTool.Models.Survey>) ViewBag.Surveys;
-    var responses = (IEnumerable<SurveyTool.Models.Response>) ViewBag.Responses;
-}
+    var surveys = (IEnumerable<SurveyTool.Models.Survey>)ViewBag.Surveys;
+    var responses = (IEnumerable<SurveyTool.Models.Response>)ViewBag.Responses;
 
+}
+<style>
+    .modal-header .close {
+        margin-top: -36px !important;
+    }
+</style>
 @section scripts
 {
     @Scripts.Render("~/bundles/models")
@@ -23,9 +28,35 @@
             });
 
             ko.applyBindings(new ResponseListModel(), $('#response-list')[0]);
+
+            $(".get_link_res").click(function () {
+                $("#myTooltip").hide();
+                //var surveyId = $("#get_link_surveyId").val();
+                var url = $(this).next().val();
+                $("#set_link_res").val("http://localhost:36318" + url);
+                $("#getValueSurvey").val("http://localhost:36318" + url);
+            });
+
+            $("#copy").click(function () {
+                /* Get the text field */
+                var copyText = document.getElementById("set_link_res");
+
+                /* Select the text field */
+                copyText.select();
+                copyText.setSelectionRange(0, 99999); /*For mobile devices*/
+
+                /* Copy the text inside the text field */
+                document.execCommand("copy");
+
+                $("#myTooltip").show();
+
+            });
         })
+
     </script>
 }
+
+
 
 <div class="page-header">
     <h2>Khảo sát <small>Khảo sát và xem lịch sử</small></h2>
@@ -41,7 +72,7 @@
         @foreach (var survey in surveys)
         {
             <div class="row">
-                <div class="span9">
+                <div class="span7">
                     <h4>
                         @if (survey.IsActive)
                         {
@@ -55,18 +86,29 @@
                         }
                     </h4>
                 </div>
+                <div class="span2 text-right">
+                    <!-- Button trigger modal -->
+                    <button type="button" class="get_link_res btn btn-default" data-toggle="modal" data-target="#exampleModalCenter">
+                        Chia sẻ <i class="icon-share"></i>
+                    </button>
+                    <input type="hidden" class="url_res" value="@Url.Action("Create","SurveyCustomer",new { surveyId=survey.Id})" />
+                </div>
+
                 <div class="span3 text-right">
                     @if (survey.IsActive)
                     {
                         <a class="btn" href="@Url.Action("Create", "Responses", new { surveyId = survey.Id })">
                             Bắt đầu khảo sát <i class="icon-arrow-right"></i>
                         </a>
+
                     }
                     else
                     {
                         <a class="btn disabled" href="#">Bắt đầu khảo sát <i class="icon-arrow-right"></i></a>
+
                     }
                 </div>
+
             </div>
             <div class="row">
                 <div class="span4 text-left">
@@ -91,13 +133,13 @@
             <hr />
         }
     </div>
-    
+
     <div id="history" class="tab-pane">
         <table id="response-list" class="table table-striped">
             <thead>
                 <tr>
-                    <th class="span1">Thời gian</th>
-                    <th class="span7">Khảo sát</th>
+                    <th class="span3">Thời gian</th>
+                    <th class="span5">Chủ đề</th>
                     <th class="span2">Kết quả</th>
                     <th class="span2">Hành động</th>
                 </tr>
@@ -106,20 +148,20 @@
                 @foreach (var response in responses)
                 {
                     <tr>
-                        <td><span class="muted">@response.CreatedOn.ToString("d")</span></td>
+                        <td><span class="muted">@response.CreatedOn</span></td>
                         <td>
-                            @Html.ActionLink(response.Survey.Name, "Details", "Responses", 
-                                             new {surveyId = response.SurveyId, id = response.Id}, 
+                            @Html.ActionLink(response.Survey.Name, "Details", "Responses",
+                                             new { surveyId = response.SurveyId, id = response.Id },
                                              null)
                         </td>
                         <td>
-                            @response.GetAnswerCount()/@response.GetQuestionCount() - 
-                            @response.CalculateScore().ToString("P1")
+                            @response.GetAnswerCount()/@response.Survey.Questions.Count() -
+                            @response.CalculateScore(response.Survey.Questions.Count()).ToString("P1")
                         </td>
                         <td>
-                            @Html.ActionLink("Xóa","Delete","Responses",
-                           new { surveyId=response.SurveyId,id=response.Id},
-                           new { @class="text-danger"}) 
+                            @Html.ActionLink("Xóa", "Delete", "Responses",
+                           new { surveyId = response.SurveyId, id = response.Id },
+                           new { @class = "text-danger" })
                         </td>
                     </tr>
                 }
@@ -127,3 +169,76 @@
         </table>
     </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" style="display:none" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Gửi biểu mẫu</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <ul id="tabs" class="nav nav-tabs">
+                    <li><a class="active" href="#email" data-toggle="tab"><i class="icon-envelope"></i> Email</a></li>
+                    <li><a href="#link" data-toggle="tab"><i class="icon-share-alt"></i>Liên kết</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div id="email" class="tab-pane active">
+                        <div class="col-sm-12 email-id-row">
+                            <form action="@Url.Action("SendEmailSurvey","Account")" method="post" id="form_submit">
+                                <input type="text" name="ListEmail" id="essai" placeholder="Thêm email...">
+                                <input type="hidden" id="getValueSurvey" name="url"/>
+                            </form>
+                            <button class="btn btn-primary" id="submit_form">Gửi</button>
+                        </div>
+                        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
+                        <!-- Latest compiled JavaScript -->
+                            
+                        <script src="~/Assets/js/jquery.email.multiple.js"></script>
+                        <script>
+                            $(document).ready(function ($) {
+                                $("#submit_form").click(function () {
+                                    
+                                    $("#form_submit").submit();
+                                });
+                                let data = []
+                                $("#essai").email_multiple({
+                                    data: data
+                                    // reset: true
+                                });
+                            });
+                        </script>
+                    </div>
+
+                    <div id="link" class="tab-pane">
+                        <label>Liên kết</label>
+                        <input type="text" class="span6" value="" id="set_link_res" onClick="this.setSelectionRange(0, this.value.length)" />
+                        <button type="button" id="copy" class="btn btn-primary">Sao chép</button>
+                        <span style="display:none;color:green" id="myTooltip">Sao chép thành công</span>
+                    </div>
+                </div><!-- Modal -->
+            </div>
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-36251023-1']);
+    _gaq.push(['_setDomainName', 'jqueryscript.net']);
+    _gaq.push(['_trackPageview']);
+
+    (function () {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+
+</script>

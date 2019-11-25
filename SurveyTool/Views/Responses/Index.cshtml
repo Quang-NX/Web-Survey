@@ -33,7 +33,7 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td><span class="muted">@item.CreatedOn.ToString("d")</span></td>
+                <td><span class="muted">@item.CreatedOn</span></td>
                 <td>
                     <a href="@Url.Action("Details", "Responses", new {surveyId = item.SurveyId, id = item.Id})">
                         @item.Survey.Name
@@ -43,8 +43,8 @@
                     @item.CreatedBy
                 </td>
                 <td>
-                    @item.GetAnswerCount()/@item.GetQuestionCount() - 
-                    @item.CalculateScore().ToString("P1")
+                    @item.GetAnswerCount()/@item.Survey.Questions.Count() - 
+                    @item.CalculateScore(item.Survey.Questions.Count()).ToString("P1")
                 </td>
                 <td>
                     @Html.ActionLink("Delete", "Delete",

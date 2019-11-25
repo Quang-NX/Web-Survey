@@ -2,19 +2,20 @@
     var self = this;
 
     // Properties
+    self.requiredEmail = ko.observable(false);
 
     self.modal = $('#add-question');
     self.questions = ko.observableArray([]);
     self.current = ko.observable();
 
-    self.hasQuestions = ko.computed(function() {
+    self.hasQuestions = ko.computed(function () {
         return self.questions().length > 0;
     }, self);
 
     self.questionCount = ko.computed(function() {
         return self.questions().length;
     }, self);
-    
+
     // Functions
 
     self.newQuestion = function() {
@@ -22,7 +23,8 @@
         self.modal.modal();
     };
 
-    self.editQuestion = function(item) {
+    self.editQuestion = function (item) {
+        console.log(item);
         self.current(item);
         self.modal.modal();
     };
@@ -94,6 +96,7 @@
             q.type(data.Questions[i].Type);
             q.body(data.Questions[i].Body);
             q.isActive(data.Questions[i].IsActive);
+            q.required(data.Questions[i].Required);
             self.questions.push(q);
         }
     }

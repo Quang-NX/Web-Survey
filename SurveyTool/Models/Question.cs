@@ -27,5 +27,7 @@ namespace SurveyTool.Models
         public DateTime ModifiedOn { get; set; }
 
         public List<Answer> Answers { get; set; }
+
+        public bool Required { get; set; }
     }
 }

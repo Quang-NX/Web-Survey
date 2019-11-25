@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 using SurveyTool.Models;
 
 namespace SurveyTool.Controllers
@@ -27,16 +28,17 @@ namespace SurveyTool.Controllers
 
         private IEnumerable<Survey> GetSurveys()
         {
-            return _db.Surveys
+            var userId = User.Identity.GetUserId();
+            return _db.Surveys.Where(x => x.UserId.Equals(userId))
                       .Select(s => new
-                          {
-                              Survey = s,
-                              Questions = s.Questions.Where(q => q.IsActive),
-                              Responses = s.Responses
+                      {
+                          Survey = s,
+                          Questions = s.Questions.Where(q => q.IsActive),
+                          Responses = s.Responses
                                            .Where(r => r.CreatedBy == User.Identity.Name)
                                            .OrderByDescending(r => r.CreatedOn)
                                            .Take(1)
-                          })
+                      })
                       .AsEnumerable()
                       .Select(x =>
                           {
@@ -50,9 +52,11 @@ namespace SurveyTool.Controllers
 
         private IEnumerable<Response> GetResponses()
         {
+            var userId = User.Identity.GetUserId();
             return _db.Responses
                      .Include("Survey")
                      .Include("Answers")
+                     .Where(x => x.Survey.UserId.Equals(userId))
                      .Where(x => x.CreatedBy == User.Identity.Name)
                      .OrderByDescending(x => x.CreatedOn)
                      .ThenByDescending(x => x.Id)

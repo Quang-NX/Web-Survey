@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
 using System.Globalization;
 using System.Linq;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
@@ -100,7 +103,7 @@ namespace SurveyTool.Controllers
             // Require that the user has already logged in via username/password or external login
             if (!await SignInManager.HasBeenVerifiedAsync())
             {
-                return View("Error");
+                return Redirect("/pages/404");
             }
             return View(new VerifyCodeViewModel { Provider = provider, ReturnUrl = returnUrl, RememberMe = rememberMe });
         }
@@ -153,7 +156,6 @@ namespace SurveyTool.Controllers
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -165,17 +167,16 @@ namespace SurveyTool.Controllers
                         iRole.Id = "User";
                         iRole.Name = "User";
                         context.Roles.Add(iRole);
-                        context.SaveChanges();
                     }
                     UserManager.AddToRole(user.Id, "User");
-                    context.SaveChanges();
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                    string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                    await UserManager.SendEmailAsync(user.Id, "Xác nhận email", "Vui lòng click vào <a href=\"" + callbackUrl + "\">đây</a> để thực hiện xác thực.");
+                    ViewBag.Message = "Chúng tôi đã gửi email cho việc xác thực tài khoản của bạn.Vui lòng";
 
-                    return RedirectToAction("Index", "Dashboard");
+                    return View(model);
                 }
                 AddErrors(result);
             }
@@ -183,7 +184,64 @@ namespace SurveyTool.Controllers
             // If we got this far, something failed, redisplay form
             return View(model);
         }
+        //[HttpPost]
+        //public async Task<ActionResult> SendEmailSurvey(string ListEmail,string url)
+        //{
+        //    string[] lstEmail = ListEmail.Split(';');
+        //    var subject = "Lời mời khảo sát";
+        //    var body = "Bạn đã nhận được một lời mời tham gia bài khảo sát.Nhấn vào <a href='"+url+"' ></a> để chuyển hướng đến bài khảo sát.";
 
+        //    //Create user
+        //    foreach(var item in lstEmail)
+        //    {
+        //        var user = new ApplicationUser { UserName=item,Email = item };
+        //        string code=await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+        //        await UserManager.SendEmailAsync(user.Id, subject, body);
+        //    }
+
+        //    return RedirectToAction("Index", "Dashboard");
+        //}
+        [HttpPost]
+        public ActionResult SendEmailSurvey(string ListEmail, string url)
+        {
+            
+            var subject = "Lời mời khảo sát";
+            var body = "Bạn đã nhận được một lời mời tham gia bài khảo sát.Nhấn vào <a href=" + url + " >đây</a> để chuyển hướng đến bài khảo sát.";
+            GuiEmail(subject, ListEmail, body);
+            return RedirectToAction("Index", "Dashboard");
+        }
+
+        //gửi email
+        public void GuiEmail(string Title, string ToEmail, string Content)
+        {
+            //Reading sender Email credential from web.config
+            string HostAdd = ConfigurationManager.AppSettings["Host"].ToString();
+            string FromEmail = ConfigurationManager.AppSettings["FromEmail"].ToString();
+            string Password = ConfigurationManager.AppSettings["Password"].ToString();
+
+
+            string[] lstEmail = ToEmail.Split(';');
+            //check gửi mail
+            // goi email
+            MailMessage mail = new MailMessage();
+            mail.From = new MailAddress(FromEmail); // Địa chửi gửi
+            mail.Subject = Title; // tiêu đề gửi
+            mail.Body = Content; // Nội dung
+            mail.IsBodyHtml = true;
+            foreach (var item in lstEmail)
+            {
+                mail.To.Add(new MailAddress(item));
+            }
+            SmtpClient smtp = new SmtpClient();
+
+            smtp.Host = HostAdd; // host gửi của Gmail
+            smtp.Port = 587; //port của Gmail
+            smtp.UseDefaultCredentials = false;
+            smtp.Credentials = new System.Net.NetworkCredential
+            (FromEmail, Password);//Tài khoản password người gửi
+            smtp.EnableSsl = true; //kích hoạt giao tiếp an toàn SSL
+            smtp.Send(mail); //Gửi mail đi
+        }
         //
         // GET: /Account/ConfirmEmail
         [AllowAnonymous]
@@ -191,10 +249,15 @@ namespace SurveyTool.Controllers
         {
             if (userId == null || code == null)
             {
-                return View("Error");
+                return Redirect("/pages/404");
             }
             var result = await UserManager.ConfirmEmailAsync(userId, code);
-            return View(result.Succeeded ? "Xác nhận Email" : "Lỗi");
+            if (result.Succeeded)
+            {
+                return View("ConfirmEmail");
+            }
+            return Redirect("/pages/404");
+
         }
 
         //
@@ -223,10 +286,10 @@ namespace SurveyTool.Controllers
 
                 // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                 // Send an email with this link
-                // string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                // var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
-                // await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
-                // return RedirectToAction("ForgotPasswordConfirmation", "Account");
+                 string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                 var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
+                 await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                 return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
 
             // If we got this far, something failed, redisplay form
@@ -246,7 +309,11 @@ namespace SurveyTool.Controllers
         [AllowAnonymous]
         public ActionResult ResetPassword(string code)
         {
-            return code == null ? View("Error") : View();
+            if(code==null)
+            {
+                return Redirect("/pages/404");
+            }
+            return View();
         }
 
         //
@@ -302,7 +369,7 @@ namespace SurveyTool.Controllers
             var userId = await SignInManager.GetVerifiedUserIdAsync();
             if (userId == null)
             {
-                return View("Error");
+                return Redirect("/pages/404");
             }
             var userFactors = await UserManager.GetValidTwoFactorProvidersAsync(userId);
             var factorOptions = userFactors.Select(purpose => new SelectListItem { Text = purpose, Value = purpose }).ToList();
@@ -324,7 +391,7 @@ namespace SurveyTool.Controllers
             // Generate the token and send it
             if (!await SignInManager.SendTwoFactorCodeAsync(model.SelectedProvider))
             {
-                return View("Error");
+                return Redirect("/pages/404");
             }
             return RedirectToAction("VerifyCode", new { Provider = model.SelectedProvider, ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
         }
@@ -404,7 +471,7 @@ namespace SurveyTool.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login");
         }
 
         //
@@ -451,7 +518,9 @@ namespace SurveyTool.Controllers
         {
             foreach (var error in result.Errors)
             {
-                ModelState.AddModelError("", error);
+                if (error.EndsWith("is already taken."))
+                    ModelState.AddModelError("", "Email đã được sử dụng.");
+                else ModelState.AddModelError("", error);
             }
         }
 

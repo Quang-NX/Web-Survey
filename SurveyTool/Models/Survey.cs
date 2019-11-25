@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
 using System.Linq;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Newtonsoft.Json;
 
 namespace SurveyTool.Models
@@ -20,6 +22,11 @@ namespace SurveyTool.Models
 
         public string Name { get; set; }
 
+        [ForeignKey("ApplicationUser")]
+        public string UserId { get; set; }
+
+        public virtual ApplicationUser ApplicationUser { get; set; }
+
         public DateTime StartDate { get; set; }
 
         public DateTime EndDate { get; set; }
@@ -28,6 +35,7 @@ namespace SurveyTool.Models
 
         public List<Response> Responses { get; set; }
 
+        public bool RequiredEmail { get; set; }
         public bool IsActive
         {
             get { return StartDate < DateTime.Now && EndDate > DateTime.Now; }
@@ -38,7 +46,7 @@ namespace SurveyTool.Models
             var js = JsonSerializer.Create(new JsonSerializerSettings());
             var jw = new StringWriter();
             js.Serialize(jw, this);
-            return jw.ToString();            
+            return jw.ToString();
         }
     }
 }

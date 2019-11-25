@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SurveyTool.Mapping;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -18,6 +19,7 @@ namespace SurveyTool
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             Database.SetInitializer<Models.ApplicationDbContext>(null);
+            AutoMapper.Mapper.Initialize(m => m.AddProfile<MappingProfile>());
         }
     }
 }
