@@ -129,6 +129,18 @@
             border-radius: 50%;
         }
 </style>
+<script>
+    $(function () {
+        $('.datepicker').datepicker({ format: 'mm/dd/yyyy' });
+
+        $(document).on('click', 'a[data-toggle=comment]', function () {
+            var id = $(this).attr('href');
+            $(id).toggle();
+            return false;
+        });
+    });
+
+</script>
 <div class="page-header">
     <a class="pull-right" href="@Url.Action("Index")">Trở về danh sách khảo sát &rarr;</a>
     <h2>@ViewData["title"]</h2>
@@ -144,7 +156,9 @@
         <div class="span6">
             <label>Bắt đầu / Kết thúc</label>
             @Html.EditorFor(x => x.StartDate)
+            @*<input name="startDate" class="datepicker input-small" type="text" value="@Model.StartDate.ToString("d")" />*@
             @Html.EditorFor(x => x.EndDate)
+            @*<input name="startDate" class="datepicker input-small" type="text" value="@Model.EndDate.ToString("d")" />*@
         </div>
     </div>
     <div class="row">

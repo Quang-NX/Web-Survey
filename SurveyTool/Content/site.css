@@ -23,24 +23,64 @@ ul.bordered.skip-first > li:first-child {
 
 body {
     padding-top: 50px;
+    font-size: 16px;
+}
+.unstyled input:focus, textarea:focus, select:focus {
+    outline: none !important;
+}
+.unstyled input[type="email"]:focus {
+    outline: none !important;
+    border:none;
+    border-style:none
+    
+}
+input[type="radio"] {
+    width: 25px !important;
+    height: 25px !important;
+}
+
+.unstyled .form-check {
+    padding: 10px;
 }
 
 .validation-summary-valid {
     display: none !important;
 }
+.span12.commentsave {
+    margin-top: 10px;
+}
 
-
+ul.unstyled, ol.unstyled {
+    background-color: white !important;
+    padding: 25px !important;
+    border-radius: 10px !important;
+    box-shadow: 1px 2px 5px 1px #999999 !important;
+    margin-bottom: 20px !important;
+}
+.action {
+    background-color: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 1px 2px 5px 1px #999999;
+    margin-bottom: 20px;
+}
+.headerpage {
+    background-color: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 1px 2px 5px 1px #999999;
+    margin-bottom: 20px;
+}
 /* ===== TOOLBARS ===== */
-
 .toolbar {
-  padding: 8px 35px 8px 14px;
-  margin-bottom: 20px;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
-  background-color: #f5f5f5;
-  border: 1px solid #e5e5e5;
-  -webkit-border-radius: 4px;
-     -moz-border-radius: 4px;
-          border-radius: 4px;
+    padding: 8px 35px 8px 14px;
+    margin-bottom: 20px;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    background-color: #f5f5f5;
+    border: 1px solid #e5e5e5;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
 }
 
 .toolbar h4,

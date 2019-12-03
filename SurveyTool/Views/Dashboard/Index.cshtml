@@ -51,12 +51,11 @@
                 $("#myTooltip").show();
 
             });
+
         })
 
     </script>
 }
-
-
 
 <div class="page-header">
     <h2>Khảo sát <small>Khảo sát và xem lịch sử</small></h2>
@@ -189,19 +188,19 @@
                         <div class="col-sm-12 email-id-row">
                             <form action="@Url.Action("SendEmailSurvey","Account")" method="post" id="form_submit">
                                 <input type="text" name="ListEmail" id="essai" placeholder="Thêm email...">
-                                <input type="hidden" id="getValueSurvey" name="url"/>
+                                <input type="hidden" id="getValueSurvey" name="url" />
                             </form>
                             <button class="btn btn-primary" id="submit_form">Gửi</button>
                         </div>
                         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 
                         <!-- Latest compiled JavaScript -->
-                            
+
                         <script src="~/Assets/js/jquery.email.multiple.js"></script>
                         <script>
                             $(document).ready(function ($) {
                                 $("#submit_form").click(function () {
-                                    
+
                                     $("#form_submit").submit();
                                 });
                                 let data = []

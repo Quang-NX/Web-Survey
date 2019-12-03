@@ -61,9 +61,8 @@ namespace SurveyTool
 
             app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
             {
-                ClientId = "449538978032-jtpd5auh00nm7rcgs5liagm7op5d15n1.apps.googleusercontent.com",
-                ClientSecret = "3iw5hs5cxI2V7-BPEsLjXv5s",
-                Provider = new GoogleOAuth2AuthenticationProvider()
+                ClientId = "982029736953-2mdksfrl8qtuohqf3e6oci5h4a4472b2.apps.googleusercontent.com",
+                ClientSecret = "PTgR6y9NdxR9Ssems5HuKuEs",
             });
         }
     }

@@ -101,7 +101,8 @@ namespace SurveyTool.Controllers
         }
         public ActionResult Delete(int surveyId, int id, string returnTo)
         {
-            var response = new Response() { Id = id, SurveyId = surveyId };
+            var response = _db.Responses.Where(x => x.SurveyId == surveyId && x.Id == id).Single();
+            _db.Responses.Remove(response);
             _db.Entry(response).State = EntityState.Deleted;
             _db.SaveChanges();
             return Redirect(returnTo ?? Url.RouteUrl("Statistic"));

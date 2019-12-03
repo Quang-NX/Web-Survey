@@ -10,6 +10,45 @@
 <script src="https://code.highcharts.com/highcharts-3d.js"></script>
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
+<div id="history" class="tab-pane">
+    <h3 style="margin-left:5px">Khảo sát gần đây</h3>
+    <table id="response-list" class="table table-striped">
+
+        <thead>
+            <tr>
+                <th class="span3">Thời gian</th>
+                <th class="span2">Chủ đề</th>
+                <th class="span2">Tài khoản</th>
+                <th class="span2">Kết quả</th>
+                <th class="span2">Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var response in Model)
+            {
+                <tr>
+                    <td><span class="muted">@response.CreatedOn</span></td>
+
+                    <td>
+                        @Html.ActionLink(response.Survey.Name, "Details", "Statistic",
+                                         new { surveyId = response.SurveyId, id = response.Id },
+                                         null)
+                    </td>
+                    <td>@response.CreatedBy</td>
+                    <td>
+                        @response.GetAnswerCount()/@response.Survey.Questions.Count()-
+                        @response.CalculateScore(response.Survey.Questions.Count()).ToString("P1")
+                    </td>
+                    <td>
+                        @Html.ActionLink("Xóa", "Delete", "Statistic",
+                       new { surveyId = response.SurveyId, id = response.Id },
+                       new { @class = "text-danger" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto;box-shadow:0px 1px 2px 2px #00000069;border-radius:5px;"></div>
 <br />
 <div style="min-width: 310px; height: 400px; margin: 0 auto;box-shadow:0px 1px 2px 2px #00000069;border-radius:5px;">
@@ -138,44 +177,6 @@
 
 <br />
 
-<div id="history" class="tab-pane">
-    <h3 style="margin-left:5px">Khảo sát gần đây</h3>
-    <table id="response-list" class="table table-striped">
 
-        <thead>
-            <tr>
-                <th class="span3">Thời gian</th>
-                <th class="span2">Chủ đề</th>
-                <th class="span2">Tài khoản</th>
-                <th class="span2">Kết quả</th>
-                <th class="span2">Hành động</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var response in Model)
-            {
-                <tr>
-                    <td><span class="muted">@response.CreatedOn</span></td>
-
-                    <td>
-                        @Html.ActionLink(response.Survey.Name, "Details", "Statistic",
-                                         new { surveyId = response.SurveyId, id = response.Id },
-                                         null)
-                    </td>
-                    <td>@response.CreatedBy</td>
-                    <td>
-                        @response.GetAnswerCount()/@response.Survey.Questions.Count()-
-                        @response.CalculateScore(response.Survey.Questions.Count()).ToString("P1")
-                    </td>
-                    <td>
-                        @Html.ActionLink("Xóa", "Delete", "Statistic",
-                       new { surveyId = response.SurveyId, id = response.Id },
-                       new { @class = "text-danger" })
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
 
 

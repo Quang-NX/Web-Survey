@@ -17,6 +17,8 @@ namespace SurveyTool.Models
 
         public System.DateTime CreatedOn { get; set; }
 
+        public string Name { get; set; }
+
         public bool PreserveCreatedOn { get; set; }
 
         public System.DateTime? ModifiedOn { get; set; }
@@ -31,6 +33,8 @@ namespace SurveyTool.Models
             // Add custom user claims here
             return userIdentity;
         }
+
+
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>

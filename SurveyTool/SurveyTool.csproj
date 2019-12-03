@@ -16,9 +16,10 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
-    <IISExpressSSLPort />
-    <IISExpressAnonymousAuthentication />
-    <IISExpressWindowsAuthentication />
+    <IISExpressSSLPort>
+    </IISExpressSSLPort>
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
     <IISExpressUseClassicPipelineMode />
     <WebGreaseLibPath>..\packages\WebGrease.1.5.2\lib</WebGreaseLibPath>
     <Use64BitIISExpress />
@@ -239,11 +240,16 @@
     <Compile Include="Migrations\201911210648003_editRequiredEmailSurvey.Designer.cs">
       <DependentUpon>201911210648003_editRequiredEmailSurvey.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201911260909352_addFiledNameUser.cs" />
+    <Compile Include="Migrations\201911260909352_addFiledNameUser.Designer.cs">
+      <DependentUpon>201911260909352_addFiledNameUser.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Answer.cs" />
     <Compile Include="Models\Chart.cs" />
     <Compile Include="Models\Customer.cs" />
+    <Compile Include="Models\CustomerSession.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Question.cs" />
@@ -337,6 +343,9 @@
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <None Include="Scripts\jquery-1.9.1.intellisense.js" />
+    <Content Include="Scripts\jquery-1.9.1.js" />
+    <Content Include="Scripts\jquery-1.9.1.min.js" />
     <Content Include="Views\ManageRole\Create.cshtml" />
     <Content Include="Views\ManageRole\Delete.cshtml" />
     <Content Include="Views\ManageRole\Index.cshtml" />
@@ -413,13 +422,10 @@
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
-    <Content Include="Scripts\jquery-1.9.1.min.map" />
     <Content Include="packages.config" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+    <Content Include="Scripts\jquery-1.9.1.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
-    <None Include="Scripts\jquery-1.9.1.intellisense.js" />
-    <Content Include="Scripts\jquery-1.9.1.js" />
-    <Content Include="Scripts\jquery-1.9.1.min.js" />
     <Content Include="Scripts\jquery-migrate-1.1.1.js" />
     <Content Include="Scripts\jquery-migrate-1.1.1.min.js" />
     <Content Include="Scripts\jquery.cleditor.js" />
@@ -502,6 +508,7 @@
     <Content Include="Views\SurveyCustomer\Create.cshtml" />
     <Content Include="Views\Shared\_CustomerLayout.cshtml" />
     <Content Include="Views\SurveyCustomer\PageResponse.cshtml" />
+    <Content Include="Views\SurveyCustomer\NotSubmitSurvey.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -527,6 +534,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201911210648003_editRequiredEmailSurvey.resx">
       <DependentUpon>201911210648003_editRequiredEmailSurvey.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911260909352_addFiledNameUser.resx">
+      <DependentUpon>201911260909352_addFiledNameUser.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

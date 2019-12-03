@@ -33,7 +33,10 @@ namespace SurveyTool.Controllers
                                .OrderByDescending(x => x.CreatedOn)
                                .ThenByDescending(x => x.Id)
                                .ToList();
-
+            if (responses == null)
+            {
+                return Redirect("/pages/404");
+            }
             return View(responses);
         }
         //Hiển thị lịch sử những lần khảo sát
@@ -49,6 +52,10 @@ namespace SurveyTool.Controllers
                               .Single(x => x.Id == id);
 
             response.Answers = response.Answers.OrderBy(x => x.Question.Priority).ToList();
+            if (response == null)
+            {
+                return Redirect("/pages/404");
+            }
             return View(response);
         }
 
@@ -71,7 +78,10 @@ namespace SurveyTool.Controllers
                                      return x.Survey;
                                  })
                              .Single();
-
+            if(survey==null)
+            {
+                return Redirect("/pages/404");
+            }
             return View(survey);
         }
 
@@ -111,7 +121,7 @@ namespace SurveyTool.Controllers
             var response = new Response() { Id = id, SurveyId = surveyId };
             _db.Entry(response).State = EntityState.Deleted;
             _db.SaveChanges();
-            return Redirect(returnTo ?? Url.RouteUrl("Statistic"));
+            return Redirect(returnTo ?? Url.RouteUrl("Root"));
         }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 
@@ -35,13 +36,31 @@ namespace SurveyTool.Controllers
                                  return x.Survey;
                              })
                              .Single();
-
+            
             return View(survey);
         }
 
         [HttpPost]
         public ActionResult CreateResponse(int surveyId, string action, Response model)
         {
+            if (Session["customer"] == null)
+            {
+                CustomerSession customerSession = new CustomerSession();
+                customerSession.NameIp = GetIp();
+                customerSession.TotalSurvey = 1;
+                customerSession.TotalSurvey -= 1;
+                Session["customer"] = customerSession;
+            }
+            else
+            {
+                CustomerSession cus = (CustomerSession)Session["customer"];
+                if (cus.NameIp == GetIp() && cus.TotalSurvey <= 0)
+                {
+                    return RedirectToAction("NotSubmitSurvey");
+                }
+                cus.TotalSurvey -= 1;
+                Session["customer"] = cus;
+            }
             bool checkInvalidEmail = false;
 
             model.Answers = model.Answers.Where(a => !String.IsNullOrEmpty(a.Value)).ToList();
@@ -77,6 +96,24 @@ namespace SurveyTool.Controllers
         {
             ViewBag.SurveyId = surveyId;
             return View();
+        }
+        public ActionResult NotSubmitSurvey()
+        {
+            return View();
+        }
+        public string GetIp()
+        {
+            IPHostEntry host;
+            string localIP = "?";
+            host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (var ip in host.AddressList)
+            {
+                if (ip.AddressFamily.ToString() == "InterNetwork")
+                {
+                    localIP = ip.ToString();
+                }
+            }
+            return localIP;
         }
     }
 }
